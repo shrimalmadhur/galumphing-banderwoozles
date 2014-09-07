@@ -32,7 +32,15 @@
 						changeCol(clickedRowNum, clickedColNum + 1);
 					}
 					setColor(clickedRowNum, clickedColNum, 'red');
-					updateCounter("green", "red");	
+					updateCounter("green", "red");
+					if(jQuery("h1.green").text() == 0){
+						if(jQuery("h1.red").text() != Board.rows*Board.cols){
+							alert("Yo Know Nufin Jon Snow! Now Press OK to restart!"); 
+							location.reload();
+						}else{
+							alert("Good Job Kid!");
+						}
+					}
 				}
 			});
 		});
