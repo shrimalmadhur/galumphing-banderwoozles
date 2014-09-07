@@ -1,6 +1,6 @@
 ;(function() {
 	var Board = {
-		boardColors = [],
+		boardColors : [],
 		rows : 0,
 		cols : 0
 	}
@@ -14,16 +14,44 @@
 			Board.cols = cols;
 			var container = jQuery("div#tile-wrapper");
 			makeGame(container, rows, cols);
-		});
-
-		jQuery('div.tile').click(function (){
-			var clickedTile = jQuery(this);
-			if(clickedTile.hasClass('green')){
-				var clickedRowNum = clickedTile.parent().index();
-				var clickedColNum = clickedTile.index();
-			}
+			jQuery('div.tile').on('click' ,function (){
+				var clickedTile = jQuery(this);
+				if(clickedTile.hasClass('green')){
+					var clickedRowNum = clickedTile.parent().index();
+					var clickedColNum = clickedTile.index();
+					if(clickedRowNum - 1 >= 0){
+						changeCol(clickedRowNum -1, clickedColNum);
+					}
+					if(clickedColNum - 1 >= 0){
+						changeCol(clickedRowNum, clickedColNum - 1);
+					}
+					if(clickedRowNum + 1 < Board.rows){
+						changeCol(clickedRowNum + 1, clickedColNum);
+					}
+					if(clickedColNum + 1 < Board.cols){
+						changeCol(clickedRowNum, clickedColNum + 1);
+					}
+					setColor(clickedRowNum, clickedColNum, 'red');
+					updateCounter("green", "red");	
+				}
+			});
 		});
 	});
+
+	var changeCol = function (row, col){
+		if(Board.boardColors[row][col] == 'green'){
+			setColor(row, col, 'blue');
+			updateCounter("green", "blue");
+		}else if(Board.boardColors[row][col] == 'blue'){
+			setColor(row, col, 'green');
+			updateCounter("blue", "green");
+		}
+	}
+
+	var updateCounter = function (removeColor, addColor){
+		jQuery('h1.' + removeColor).text(Number(jQuery('h1.' + removeColor).text()) - 1);
+		jQuery('h1.' + addColor).text(Number(jQuery('h1.' + addColor).text()) + 1);
+	}
 	var setColor = function (row, col, color){
 		var currTile = getTile(row, col);
 		currTile.removeClass('red')
@@ -32,6 +60,7 @@
 			.addClass(color);
 
 		Board.boardColors[row][col] = color;
+		//console.log(Board.boardColors);
 
 	} 
 
@@ -48,7 +77,7 @@
 		//$eachTile = jQuery("<div class='tile'></div>");
 		
 		for(var curRow = 0; curRow < rows; curRow++){
-			boardColors[curRow] = [];
+			Board.boardColors[curRow] = [];
 			container.append("<div class='tile-row'></div>");
 			for(var curCol = 0; curCol < cols; curCol++){
 				console.log(curCol);
